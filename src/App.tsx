@@ -10,9 +10,12 @@ import IndicatorUI from './components/IndicatorUI';
 import useFetchData from './hooks/useFetchData';
 import TableUI from './components/TableUI';
 import ChartUI from './components/ChartUI';
+import { useState } from 'react';
 
 function App() {
    const { data, loading, error } = useFetchData();
+   // Utilice una variable de estado para almacenar la opción seleccionada por el usuario
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
    return (
       <Grid container spacing={5} justifyContent="center" alignItems="center">
 
