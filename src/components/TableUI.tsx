@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import useFetchData from '../hooks/useFetchData';
 
 interface OpenMeteoResponse {
   current: {
@@ -16,29 +16,8 @@ interface OpenMeteoResponse {
   };
 }
 
-function useFetchData() {
-  const URL = 'https://api.open-meteo.com/v1/forecast?latitude=-2.1962&longitude=-79.8862&hourly=temperature_2m,wind_speed_10m&current=temperature_2m,relative_humidity_2m,apparent_temperature,wind_speed_10m';
-  
-  const [data, setData] = useState<OpenMeteoResponse | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(URL);
-        const json = await response.json();
-        setData(json);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, []);
-
-  return { data, loading, error };
+interface TableUIProps {
+  selectedOption: string | null;
 }
 
 function prepareTableData(data: OpenMeteoResponse) {
@@ -87,8 +66,8 @@ const columns: GridColDef[] = [
   },
 ];
 
-export default function TableUI() {
-  const { data, loading, error } = useFetchData();
+export default function TableUI({ selectedOption }: TableUIProps) {
+  const { data, loading, error } = useFetchData(selectedOption);
 
   if (loading) {
     return (
